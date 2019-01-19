@@ -7,7 +7,6 @@ function getQuery() {
     console.log(query);
     var advQuery = "+";
 
-    if ($('#advancedSearch').css('display') != 'none') {
         if ($('#authorSearch').val() != "") {
             advQuery += "inauthor:" + $('#authorSearch').val();
         }
@@ -29,7 +28,6 @@ function getQuery() {
         if (advQuery != "+") {
             query += advQuery;
         }
-    }
     query = query.replace(" ", "+");
     return query;
 }
@@ -50,9 +48,9 @@ function initialLoad() { //Gets initial count of books and pages
 };
 
 function getBooks(startIndex) {
-    pageIndex = startIndex;
+    startIndex = startIndex*10
     $('#resultsList li').remove();
-    query = $('#searchQuery').val();
+    query = getQuery();
     console.log(query);
     query = query.replace(" ", "+");
     $.get('https://www.googleapis.com/books/v1/volumes?q=' + query + '&startIndex=' + startIndex, function (data, status) {
@@ -68,7 +66,9 @@ function loadBook(bookId) {
     var book = firstTen.find(x => x.id == bookId);
     $('#bookImage').attr('src', book.volumeInfo.imageLinks.thumbnail)
     $('#bookTitle').text(book.volumeInfo.title);
-    $('#bookDescription').text(book.volumeInfo.description)
+    $('#bookDescription').text(book.volumeInfo.description);
+    $('#moreInfo').attr('href', book.volumeInfo.infoLink);
+    $('#moreInfo').text('More Info')
     var author = "by ";
     book.volumeInfo.authors.forEach(auth => {
         author += auth + "; "
@@ -79,7 +79,7 @@ function loadBook(bookId) {
 
 function nextPage() {
     if ((pageIndex) <= totalPages) {
-    pageIndex += 10;
+        pageIndex += 1;
         pageNum = parseInt($('#curPage').text());
         $('#curPage').text(pageNum + 1);
         getBooks(pageIndex);
@@ -88,7 +88,7 @@ function nextPage() {
 
 function prevPage() {
     if ((pageIndex) > 0) {
-    pageIndex -= 10;
+        pageIndex -= 1;
         pageNum = parseInt($('#curPage').text());
         $('#curPage').text(pageNum - 1);
         getBooks(pageIndex);
@@ -108,11 +108,14 @@ function toggleAdvanced() {
 
 function jumpTo() {
     var page = parseInt($("#jumpTo").val());
-    if (page <= totalPages) {
+    if (page < totalPages && page > 0) {
         getBooks(page);
         $('#curPage').text(page);
-    } else {
+    } else if (page >= totalPages){
         getBooks(totalPages);
         $('#curPage').text(totalPages);
+    } else {
+        $('body').css('filter', 'invert(100%)');
+        alert("Hey look, an edge case!")
     }
 }

@@ -26,3 +26,7 @@ footer {
     text-align: center;
     max-width: 1200px;
 }
+.bookContainer {
+    overflow-y: scroll;
+    height: 75%;
+}
