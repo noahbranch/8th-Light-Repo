@@ -35,7 +35,7 @@ function getQuery() {
 function initialLoad() { //Gets initial count of books and pages
     $('#resultsList li').remove();
     query = getQuery();
-    $.get('https://www.googleapis.com/books/v1/volumes?q=' + query, function (data, status) {
+    $.get('https://www.googleapis.com/books/v1/volumes?q=' + query + "&key=AIzaSyBYPJXb-GoorMb9krjMQaz33qwKHqPz5cc", function (data, status) {
         console.log(data);
         firstTen = data.items;
         firstTen.forEach(element => {
@@ -53,7 +53,7 @@ function getBooks(startIndex) {
     query = getQuery();
     console.log(query);
     query = query.replace(" ", "+");
-    $.get('https://www.googleapis.com/books/v1/volumes?q=' + query + '&startIndex=' + startIndex, function (data, status) {
+    $.get('https://www.googleapis.com/books/v1/volumes?q=' + query + '&startIndex=' + startIndex + "&key=AIzaSyBYPJXb-GoorMb9krjMQaz33qwKHqPz5cc", function (data, status) {
         console.log(data);
         firstTen = data.items;
         firstTen.forEach(element => {
