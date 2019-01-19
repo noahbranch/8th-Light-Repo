@@ -95,6 +95,9 @@ body {
   color: #212529;
   background-color: #f3f3f3;
     max-width: 1200px;
+    align-content: center;
+    margin: 0 auto !important;
+    float: none !important;
 }
 
 [tabindex="-1"]:focus {
@@ -1559,6 +1562,7 @@ pre code {
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 0.25rem;
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    padding: 10px;
 }
 
 .form-control::-ms-expand {

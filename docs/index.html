@@ -3,98 +3,66 @@
 <head>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/bootstrap.css">
-    <script src="jquery.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/index.js"></script>
 </head>
 
 <body>
+    <header>
+        <h1>Google Book Search</h1>
+    </header>
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-6">
-                <div>
-                    <input type="text" id="searchQuery" />
-                    <button id="search" class="btn-primary">Search</button>
+                <div class="search">
+                    <input type="text" class="search form-control" placeholder="Search" id="searchQuery" />
+                    <div class="container-fluid" id="advancedSearch">
+                        <input type="text" class="search form-control" placeholder="Author" id="authorSearch" />
+                        <input type="text" class="search form-control" placeholder="Title" id="titleSearch" />
+                        <input type="text" class="search form-control" placeholder="Subject" id="subjectSearch" />
+                        <input type="text" class="search form-control" placeholder="Publisher" id="pubSearch" />
+                        <input type="text" class="search form-control" placeholder="ISBN" id="isbnSearch" />
+                        <input type="text" class="search form-control" placeholder="LCCN" id="lccnSearch" />
+                    </div>
                 </div>
+                <div>
+                    <button id="advancedOpen" class="btn btn-default" onclick="toggleAdvanced()">Show Advanced Search</button>
+                    <button id="search" class="btn btn-primary" onclick="initialLoad()">Search</button>
+                </div>                
                 <div class="results">
                     <ul id="resultsList">
 
                     </ul>
-                    <p>Results: <span id="resultCount"></span></p>
-                    <button id="prevPage" class="btn btn-primary">Previous Page</button>
-                    Page <span id="curPage">0</span> of <span id="totalPages">0</span>
-                    <button id="nextPage" class="btn btn-primary">Next Page</button>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="bookInfo">
-                    <h3 id="bookTitle"></h3>
-                    <span id="author"></span>
-                    <img id="bookImage">
+                    <div id="mainInfo" class="row">
+                        <div class="col-md-4"><img id="bookImage">
+                        </div>
+                        <div class="col-md-8">
+                            <h3 id="bookTitle"></h3>
+                            <p id="author"></p>
+                        </div>
+                    </div>
                     <p id="bookDescription"></p>
                     <p id="publisher"></p>
                 </div>
             </div>
         </div>
     </div>
+    <footer>
+        <div>
+            <button id="prevPage" class="btn btn-primary" onclick="prevPage()">Previous Page</button>
+            Page <span id="curPage">0</span> of <span id="totalPages">0</span>
+        <button id="nextPage" class="btn btn-primary" onclick="nextPage()">Next Page</button>
+        </div>
+        <div>
+            <button class="btn btn-primary" onclick="jumpTo()">Jump to page</button>
+            <input type="text" id="jumpTo" />
+        </div>
+        
+    </footer>
 </body>
-<script>
-    var firstTen;
-    var pageIndex = 0;
-    var totalPage = 0;
-    $('#search').click(function () { //Gets initial count of books and pages
-        query = $('#searchQuery').val();
-        console.log(query);
-        query = query.replace(" ", "+");
-        $.get('https://www.googleapis.com/books/v1/volumes?q=' + query, function (data, status) {
-            console.log(data);
-            $('#resultCount').text(data.totalItems)
-            firstTen = data.items;
-            firstTen.forEach(element => {
-                $('#resultsList').append('<li><button class="btn btn-link bookLink" id=' + element.id + '>' + element.volumeInfo.title + '</button></li>');
-            });
-            $('#curPage').text("1");
-            totalPages = Math.ceil(data.totalItems / 10);
-            $('#totalPages').text(totalPages);
-        });
-    });
-    function getBooks(startIndex) {
-        $('#resultsList li').remove();
-        query = $('#searchQuery').val();
-        console.log(query);
-        query = query.replace(" ", "+");
-        $.get('https://www.googleapis.com/books/v1/volumes?q=' + query + '&startIndex=' + startIndex, function (data, status) {
-            console.log(data);
-            firstTen = data.items;
-            firstTen.forEach(element => {
-                $('#resultsList').append('<li><button class="btn btn-link bookLink" id=' + element.id + '>' + element.volumeInfo.title + '</button></li>');
-            });
-            totalPages = Math.ceil(data.totalItems / 10);
-        });
-    }
-    $(document).on('click', '.bookLink', function () {
-        var book = firstTen.find(x => x.id == this.id);
-        $('#bookImage').attr('src', book.volumeInfo.imageLinks.thumbnail)
-        $('#bookTitle').text(book.volumeInfo.title);
-        $('#bookDescription').text(book.volumeInfo.description)
-        var author = "by ";
-        book.volumeInfo.authors.forEach(auth => {
-            author += auth + "; "
-        });
-        $('#author').text(author);
-        $('#publisher').text('Published by: '+ book.volumeInfo.publisher)
-    });
-    $('#nextPage').click(function () {
-        pageIndex += 10;
-        pageNum = parseInt($('#curPage').text());
-        $('#curPage').text(pageNum + 1);
-        getBooks(pageIndex);
-    });
-    $('#prevPage').click(function () {
-        pageIndex -= 10;
-        pageNum = parseInt($('#curPage').text());
-        $('#curPage').text(pageNum - 1);
-        getBooks(pageIndex);
-    });
-
-</script>
 
 </html>

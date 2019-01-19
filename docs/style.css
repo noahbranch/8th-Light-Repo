@@ -1,6 +1,28 @@
+header {
+    text-align: center;
+}
 #searchQuery{
     width: 300px;
 }
 .btn {
     cursor: pointer;
+}
+#advancedSearch {
+    display: none;
+}
+.search {
+    width: 300px;
+    margin-bottom: 5px !important;
+}
+
+.advSearch {
+    width: 300px !important;
+}
+
+footer {
+    position:fixed;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    max-width: 1200px;
 }
