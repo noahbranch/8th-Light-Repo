@@ -2,7 +2,7 @@ header {
     text-align: center;
 }
 #searchQuery{
-    width: 300px;
+    width: 100%;
 }
 .btn {
     cursor: pointer;
@@ -11,12 +11,12 @@ header {
     display: none;
 }
 .search {
-    width: 300px;
+    width: 100%;
     margin-bottom: 5px !important;
 }
 
 .advSearch {
-    width: 300px !important;
+    width: 100% !important;
 }
 
 footer {
@@ -29,4 +29,18 @@ footer {
 .bookContainer {
     overflow-y: scroll;
     height: 75%;
+}
+
+#resultsList li {
+    white-space: nowrap;
+}
+
+.bookLink {
+    width: 100%;
+    text-align: center;
+    white-space: normal !important;
+    margin: 5px;
+}
+.bookLink:hover {
+    background-color: dodgerblue;
 }
