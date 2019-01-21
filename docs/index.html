@@ -13,26 +13,34 @@
     </header>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6 bookContainer">
                 <div class="search">
-                    <input type="text" class="search form-control" placeholder="Search" id="searchQuery" />
+                    <div class="form-row">
+                        <input type="text" class="search form-control" placeholder="Search" id="searchQuery" />
+                    </div>
                     <div class="container-fluid" id="advancedSearch">
-                        <input type="text" class="search form-control" placeholder="Author" id="authorSearch" />
-                        <input type="text" class="search form-control" placeholder="Title" id="titleSearch" />
-                        <input type="text" class="search form-control" placeholder="Subject" id="subjectSearch" />
-                        <input type="text" class="search form-control" placeholder="Publisher" id="pubSearch" />
-                        <input type="text" class="search form-control" placeholder="ISBN" id="isbnSearch" />
-                        <input type="text" class="search form-control" placeholder="LCCN" id="lccnSearch" />
+                        <div class="form-row">
+                            <input type="text" class="search form-control col-md-6" placeholder="Author" id="authorSearch" />
+                            <input type="text" class="search form-control col-md-6" placeholder="Title" id="titleSearch" />
+                        </div>
+                        <div class="form-row">
+                            <input type="text" class="search form-control col-md-6" placeholder="Subject" id="subjectSearch" />
+                            <input type="text" class="search form-control col-md-6" placeholder="Publisher" id="pubSearch" />
+                        </div>
+                        <div class="form-row">
+                            <input type="text" class="search form-control col-md-6" placeholder="ISBN" id="isbnSearch" />
+                            <input type="text" class="search form-control col-md-6" placeholder="LCCN" id="lccnSearch" />
+                        </div>
                     </div>
                 </div>
                 <div>
                     <button id="advancedOpen" class="btn btn-default" onclick="toggleAdvanced()">Show Advanced Search</button>
                     <button id="search" class="btn btn-primary" onclick="initialLoad()">Search</button>
-                </div>                
+                </div>
                 <div class="results">
-                    <ul id="resultsList">
+                    <div id="resultsList">
 
-                    </ul>
+                    </div>
                 </div>
             </div>
             <div class="col-md-6 bookContainer">
@@ -54,15 +62,10 @@
     </div>
     <footer>
         <div>
-            <button id="prevPage" class="btn btn-primary" onclick="prevPage()">Previous Page</button>
+            <button disabled=disabled id="prevPage" class="btn btn-primary" onclick="prevPage()">Previous Page</button>
             Page <span id="curPage">0</span> of <span id="totalPages">0</span>
-        <button id="nextPage" class="btn btn-primary" onclick="nextPage()">Next Page</button>
+            <button id="nextPage" class="btn btn-primary" onclick="nextPage()">Next Page</button>
         </div>
-        <div>
-            <button class="btn btn-primary" onclick="jumpTo()">Jump to page</button>
-            <input type="text" id="jumpTo" />
-        </div>
-        
     </footer>
 </body>
 
