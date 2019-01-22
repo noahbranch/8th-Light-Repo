@@ -1,0 +1,15 @@
+No handling of edge cases
+	-Problem: If a user accidentally enters anything other than 0-8, the program fails
+	-Solution: Add error handling that notifies user of mistake and allows them to re-enter input
+	-Suggestion: While loop that repeats as long as spot is not contained within the board array. Change spot to a string to accept bad input and throw error if input is not 0-8. 
+
+Game ends after one run through
+	-Problem: After one run through the code exits abruptly and does not give the option to repeat
+	-Solution: Give player the option to replay or exit after a game over state is triggered
+	-Suggestion: Add a while loop to the main function that gets user input after the game is over. If the user indicates they wish to play again, repeat. If not, exit the loop and end the program. Note: The board will need to be reset before the game is played again.
+
+Game is currently very easily beatable
+	-Problem: with random placement there is a chance that the computer will win, but with proper strategy it can be beaten every time.
+	-Solution: Better optimize the GetBestMove() method in order to find the actual best move
+	-Suggestion: In its current state the method only checks one move ahead in order to determine the best move. While this is a good first step, a better solution would be able to check 2 or 3 moves ahead in order to determine what moves will set it up for a win state. 
+
