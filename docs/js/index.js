@@ -124,6 +124,7 @@ function nextPage() {
     getBooks(pageIndex);
     if (pageIndex == (totalPages - 1)) {
         $('#nextPage').prop('disabled', true);
+        $('endOfResults').text('Due to restrictions from Google\'s API, results are limited to 5 pages. To get a better result, try using a more specific query or the advanced search function');
     }
 };
 
