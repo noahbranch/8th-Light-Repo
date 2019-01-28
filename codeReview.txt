@@ -1,15 +1,25 @@
 No handling of edge cases
 	-Problem: If a user accidentally enters anything other than 0-8, the program fails
 	-Solution: Add error handling that notifies user of mistake and allows them to re-enter input
-	-Suggestion: While loop that repeats as long as spot is not contained within the board array. Change spot to a string to accept bad input and throw error if input is not 0-8. 
+	-Suggestion: While loop that repeats if spot is not contained within the board array. Change spot to a string to accept bad input and throw error if input is not 0-8. 
 
 Game ends after one run through
 	-Problem: After one run through the code exits abruptly and does not give the option to repeat
 	-Solution: Give player the option to replay or exit after a game over state is triggered
 	-Suggestion: Add a while loop to the main function that gets user input after the game is over. If the user indicates they wish to play again, repeat. If not, exit the loop and end the program. Note: The board will need to be reset before the game is played again.
 
+Player cannot choose between X and O
+    -Problem: Currently the game forces the player to be X and the computer to be O
+    -Solution: Prompt the player at the beginning of the game to select between X and O
+    -Suggestion: Create two variables labeled something similar to playerSymbol and computerSymbol. At the beginning of the game, prompt the player to select X or O as their symbol. Then assign their choice to playerSymbol, and the opposite to computerSymbol. This allows for a more custom game.
+
+Player always goes first
+    -Problem: The player is forced to make the first move in the game
+    -Solution: Allow the player to choose which player makes the first move
+    -Suggestion: At the beginning of the game, prompt the player to choose who will go first. If the computer player goes first, then it could automatically place its piece in the middle of the board for simplicity. Or if the next suggestion is followed, just run GetBestMove() to determine where to place the first piece.
+
 Game is currently very easily beatable
 	-Problem: with random placement there is a chance that the computer will win, but with proper strategy it can be beaten every time.
-	-Solution: Better optimize the GetBestMove() method in order to find the actual best move
-	-Suggestion: In its current state the method only checks one move ahead in order to determine the best move. While this is a good first step, a better solution would be able to check 2 or 3 moves ahead in order to determine what moves will set it up for a win state. 
+	-Solution: Better optimize the GetBestMove() method in order to find the actual best move using a minimax algorithm
+	-Suggestion: In order to make the game of tic tac toe unbeatable, the program should have a minimax function that helps to evaluate which move set will ultimately result in a win state. For each turn, the function will need to check every possible move to see whether it returns an end state. If the computer wins, it will return a +1, if the player wins it will return a -1, if the two players tie it will return a 0. The computer will then choose the option with the maximum score in the list of possible moves and place its piece there. However, this approach only works if each move results in an end state. If a move does not result in an end state, the function will call itself and find out all the possible moves the opponent can make and create its own list for the opponent. Instead of looking for the max value possible, the function will return the minimum value and push that into the original list, indicating that using that move will give the opponent the ability to win. After all possible moves are evaluated like this, the program will pick the max value and make its decision. This article explains the thought process very well and is helpful for understanding the minimax algorithm better. https://www.neverstopbuilding.com/blog/minimax
 
