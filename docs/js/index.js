@@ -35,17 +35,23 @@ function getQuery() {
 async function searchBook() {
     $('.btn').prop('disabled', true);
     books = await getBooks(0);
-    var possiblePages = Math.ceil(books.totalItems / 40);
-    possiblePages != 0 ? $('#curPage').text('1') : $('#curPage').text('0');
-    if (possiblePages < 5) {
-        $('#totalPages').text(possiblePages);
-        totalPages = possiblePages;
+    if (books != undefined) {
+        var possiblePages = Math.ceil(books.totalItems / 40);
+        possiblePages != 0 ? $('#curPage').text('1') : $('#curPage').text('0');
+        if (possiblePages < 5) {
+            $('#totalPages').text(possiblePages);
+            totalPages = possiblePages;
+        } else {
+            $('#totalPages').text(5);
+            totalPages = 5;
+        }
     } else {
-        $('#totalPages').text(5);
-        totalPages = 5;
+        $('#curPage').text('0');
+        $('#totalPages').text('0');
     }
+
     $('.btn').prop('disabled', false);
-    if (totalPages <= 1) {
+    if (books == undefined || totalPages <= 1) {
         $('#nextPage').prop('disabled', true);
     }
     $('#prevPage').prop('disabled', true);
