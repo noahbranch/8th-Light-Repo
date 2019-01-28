@@ -24,18 +24,17 @@
                             <input type="text" class="search form-control col-md-6" placeholder="Title" id="titleSearch" />
                         </div>
                         <div class="form-row">
-                            <input type="text" class="search form-control col-md-6" placeholder="Subject" id="subjectSearch" />
                             <input type="text" class="search form-control col-md-6" placeholder="Publisher" id="pubSearch" />
+                            <input type="text" class="search form-control col-md-6" placeholder="ISBN" id="isbnSearch" />
                         </div>
                         <div class="form-row">
-                            <input type="text" class="search form-control col-md-6" placeholder="ISBN" id="isbnSearch" />
-                            <input type="text" class="search form-control col-md-6" placeholder="LCCN" id="lccnSearch" />
+                            <input type="text" class="search form-control col-md-12" placeholder="Subject" id="subjectSearch" />
                         </div>
                     </div>
                 </div>
                 <div>
                     <button id="advancedOpen" class="btn btn-default" onclick="toggleAdvanced()">Show Advanced Search</button>
-                    <button id="search" class="btn btn-primary" onclick="initialLoad()">Search</button>
+                    <button id="search" class="btn btn-primary" onclick="searchBook(0)">Search</button>
                 </div>
                 <div class="results">
                     <div id="resultsList">
