@@ -6,13 +6,13 @@ function getQuery() {
   var subject = $('#subjectSearch').val() ? `+subject${$('#subjectSearch').val()}` : '';
   var isbn = $('#isbnSearch').val() ? `+isbn${$('#isbnSearch').val()}` : '';
   return `${basicSearch}${author}${title}${publisher}${isbn}${subject}`;
-}
+};
 
 async function searchBook() {
   await getBooks(0);
   $('#lowNum').text(1);
   $('#bigNum').text(10);
-}
+};
 
 async function getBooks(startIndex) { //Get books
   $('.btn').prop('disabled', true);
@@ -27,6 +27,7 @@ async function getBooks(startIndex) { //Get books
         showError('No results found!');
       }
       $('.btn').prop('disabled', false);
+      return data.totalItems;
     })
     .fail(function (data) {
       showError(data.status);
@@ -43,8 +44,10 @@ async function loadBook(volumeId) {
       $('#publisher').text('Published by: ' + (data.volumeInfo.publisher || 'Unknown'));
       $('#bookDescription').html(data.volumeInfo.description || 'No summary available');
       $('#bookImage').attr('src', data.volumeInfo.imageLinks.thumbnail || 'nobook.png')
-    });
-}
+    }).fail(function() {
+      showError('Issue retrieving volume from Google Books');
+  });
+};
 
 async function nextPage() {
   var highNum = parseInt($('#bigNum').text());
@@ -73,7 +76,7 @@ function toggleAdvanced() {
     advSearch.css('display', 'none');
     $('#advancedOpen').text('Show Advanced Search');
   }
-}
+};
 
 function showError(error) {
   switch (error) {
@@ -91,4 +94,10 @@ function showError(error) {
   setTimeout(function () {
     $('#toast').removeClass('show');
   }, 3000);
+};
+function updatePages(startIndex, totalItems) {
+    if (startIndex > 0) {
+        $('#lowNum').text(startIndex);
+        $('#highNum').text(startIndex - 10);
+    }
 }
