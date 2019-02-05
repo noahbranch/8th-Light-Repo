@@ -1,154 +1,94 @@
-var firstForty;
-var pageIndex = 0;
-var totalPages = 0;
-
-$(document).ready(function () {
-
-});
-
 function getQuery() {
-    var query = $('#searchQuery').val();
-    var advQuery = "";
-
-    if ($('#authorSearch').val() != "") {
-        advQuery += "+inauthor:" + $('#authorSearch').val();
-    }
-    if ($('#titleSearch').val() != "") {
-        advQuery += "+intitle:" + $('#titleSearch').val();
-    }
-    if ($('#pubSearch').val() != "") {
-        advQuery += "+inpublisher:" + $('#pubSearch').val();
-    }
-    if ($('#subjectSearch').val() != "") {
-        advQuery += "+subject:" + $('#subjectSearch').val();
-    }
-    if ($('#isbnSearch').val() != "") {
-        advQuery += "+isbn:" + $('#isbnSearch').val();
-    }
-    if ($('#lccnSearch').val() != "") {
-        advQuery += "+lccn:" + $('#lccnSearch').val();
-    }
-    if (advQuery != "") {
-        query += advQuery;
-    }
-    query = query.replace(" ", "+");
-    return query;
+  var basicSearch = $('#searchQuery').val();
+  var author = $('#authorSearch').val() ? `+inauthor${$('#authorSearch').val()}` : '';
+  var title = $('#titleSearch').val() ? `+intitle${$('#titleSearch').val()}` : '';
+  var publisher = $('#pubSearch').val() ? `+inpublisher${$('#pubSearch').val()}` : '';
+  var subject = $('#subjectSearch').val() ? `+subject${$('#subjectSearch').val()}` : '';
+  var isbn = $('#isbnSearch').val() ? `+isbn${$('#isbnSearch').val()}` : '';
+  return `${basicSearch}${author}${title}${publisher}${isbn}${subject}`;
 }
 
-function initialLoad() { //Gets initial count of books and pages
-    $('#resultsList button').remove();
-    query = getQuery();
-    if (query == "") {
-        return;
-    }
-    $('.btn').prop('disabled', true);
-    $.ajax({
-        url: 'https://www.googleapis.com/books/v1/volumes?q=' + query + "&maxResults=40",
-        type: "GET",
-        dataType: 'JSON',
-        success: function (data) {
-            firstForty = data.items;
-            firstForty.forEach(element => {
-                $('#resultsList').append('<button class="btn btn-default bookLink" onclick="loadBook(\'' + element.id + '\')">' + element.volumeInfo.title + '</button>');
-            });
-            $('#curPage').text("1");
-            var possiblePages = Math.ceil(data.totalItems / 40);
-            if (possiblePages < 5) {
-                $('#totalPages').text(possiblePages);
-                totalPages = possiblePages;
-            } else {
-                $('#totalPages').text(5);
-                totalPages = 5;
-            }
-            $('.btn').prop('disabled', false);
-            if (totalPages <= 1) {
-                $('#nextPage').prop('disabled', true);
-            }
-            $('#prevPage').prop('disabled', true);
-        }
-    });
-};
+async function searchBook() {
+  await getBooks(0);
+  $('#lowNum').text(1);
+  $('#bigNum').text(10);
+}
 
-function getBooks(startIndex) {
-    $('.btn').prop('disabled', true);
-    startIndex = (startIndex) * 40
-    query = getQuery();
-    $.ajax({
-        url:'https://www.googleapis.com/books/v1/volumes?q=' + query + '&startIndex=' + startIndex + "&maxResults=40", 
-        type: "GET",
-        dataType: 'JSON',
-        success: function (data) {
+async function getBooks(startIndex) { //Get books
+  $('.btn').prop('disabled', true);
+  $.get('https://www.googleapis.com/books/v1/volumes?q=' + getQuery() + '&startIndex=' + startIndex + '&maxResults=10&key=AIzaSyAUDi2XPJCOlyCHZVBHIOOnXyiFD8HlC24')
+    .done(function (data) {
+      if (data.totalItems > 0 && data.items != undefined) {
         $('#resultsList button').remove();
-        firstForty = data.items;
-        firstForty.forEach(element => {
-            $('#resultsList').append('<button class="btn btn-default bookLink" onclick="loadBook(\'' + element.id + '\')">' + element.volumeInfo.title + '</button>');
+        data.items.forEach(book => {
+          $('#resultsList').append('<button class="btn btn-default bookLink" onclick="loadBook(\'' + book.id + '\')">' + book.volumeInfo.title + '</button>');
         });
-        }
+      } else {
+        showError('No results found!');
+      }
+      $('.btn').prop('disabled', false);
+    })
+    .fail(function (data) {
+      showError(data.status);
+      $('.btn').prop('disabled', false);
     });
-    $('.btn').prop('disabled', false);
-    if (totalPages <= 1) {
-        $('#nextPage').prop('disabled', true);
-    }
+};
+async function loadBook(volumeId) {
+  $.get('https://www.googleapis.com/books/v1/volumes/' + volumeId)
+    .done(function (data) {
+      $('#bookTitle').text(data.volumeInfo.title);
+      $('#author').text(data.volumeInfo.authors.toString().replace(',', '; ') || 'Author Unknown');
+      $('#moreInfo').text('More Info')
+      $('#moreInfo').attr('href', data.volumeInfo.infoLink);
+      $('#publisher').text('Published by: ' + (data.volumeInfo.publisher || 'Unknown'));
+      $('#bookDescription').html(data.volumeInfo.description || 'No summary available');
+      $('#bookImage').attr('src', data.volumeInfo.imageLinks.thumbnail || 'nobook.png')
+    });
 }
 
-function loadBook(bookId) {
-    var book = firstForty.find(x => x.id == bookId);
-    var book = firstForty.find(x => x.id == bookId);
-    var thumbNail = "nobook.png"
-    if (book.volumeInfo.imageLinks != undefined) {
-        thumbNail = book.volumeInfo.imageLinks.thumbnail;
-    }
-    $('#bookImage').attr('src', thumbNail)
-    $('#bookTitle').text(book.volumeInfo.title);
-    $('#bookDescription').text((book.volumeInfo.description != undefined ? book.volumeInfo.description : "No summary available"));
-    $('#moreInfo').attr('href', book.volumeInfo.infoLink);
-    $('#moreInfo').text('More Info')
-    var author = "by ";
-    if (book.volumeInfo.authors == undefined) {
-        author = "Author Unknown";
-    } else {
-
-        book.volumeInfo.authors.forEach(auth => {
-            author += auth + "; "
-        });
-    }
-    $('#author').text(author);
-    $('#publisher').text('Published by: ' + (book.volumeInfo.publisher != undefined ? book.volumeInfo.publisher : "Unknown"));
+async function nextPage() {
+  var highNum = parseInt($('#bigNum').text());
+  var lowNum = parseInt($('#lowNum').text());
+  await getBooks(lowNum + 10);
+  $('#lowNum').text(lowNum + 10);
+  $('#bigNum').text(highNum + 10);
 };
 
-function nextPage() {
-    $('#prevPage').prop('disabled', false);
-    pageIndex += 1;
-    pageNum = parseInt($('#curPage').text());
-    $('#curPage').text(pageNum + 1);
-    getBooks(pageIndex);
-    if (pageIndex == (totalPages - 1)) {
-        $('#nextPage').prop('disabled', true);
-        $('endOfResults').text('Due to restrictions from Google\'s API, results are limited to 5 pages. To get a better result, try using a more specific query or the advanced search function');
-    }
-};
-
-function prevPage() {
-    $('#nextPage').prop('disabled', false);
-    pageIndex -= 1;
-    if (pageIndex >= 0) {
-        pageNum = parseInt($('#curPage').text());
-        $('#curPage').text(pageNum - 1);
-        getBooks(pageIndex);
-    }
-    if (pageIndex <= 0) {
-        pageIndex = 0;
-        $('#prevPage').prop('disabled', true);
-    }
+async function prevPage() {
+  var highNum = parseInt($('#bigNum').text());
+  var lowNum = parseInt($('#lowNum').text());
+  if (lowNum - 10 >= 1) {
+    await getBooks(lowNum - 10);
+    $('#lowNum').text(lowNum - 10);
+    $('#bigNum').text(highNum - 10);
+  }
 };
 
 function toggleAdvanced() {
-    var advSearch = $('#advancedSearch');
-    if (advSearch.css('display') == 'none') {
-        $('#advancedOpen').text("Hide Advanced Search");
-        advSearch.css('display', 'block');
-    } else {
-        advSearch.css('display', 'none');
-        $('#advancedOpen').text("Show Advanced Search");
-    }
+  var advSearch = $('#advancedSearch');
+  if (advSearch.css('display') == 'none') {
+    $('#advancedOpen').text('Hide Advanced Search');
+    advSearch.css('display', 'block');
+  } else {
+    advSearch.css('display', 'none');
+    $('#advancedOpen').text('Show Advanced Search');
+  }
+}
+
+function showError(error) {
+  switch (error) {
+    case 400:
+      var errorMesssage = 'Please enter a search term';
+      break;
+    case 403:
+      var errorMesssage = 'The limit for searches through the API has been reached!';
+      break;
+    default:
+      var errorMesssage = error;
+      break;
+  }
+  $('#toast').addClass('show').text(errorMesssage);
+  setTimeout(function () {
+    $('#toast').removeClass('show');
+  }, 3000);
 }

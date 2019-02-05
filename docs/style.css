@@ -44,3 +44,44 @@ footer {
 .bookLink:hover {
     background-color: dodgerblue;
 }
+#toast {
+  visibility: hidden; 
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: red;
+  opacity: 0.4;
+  color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+  right: 10%;
+  top: 30px;
+}
+
+#toast.show {
+  visibility: visible; 
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+  from {bottom: 0; opacity: 0;} 
+  to {bottom: 30px; opacity: 0.4;}
+}
+
+@keyframes fadein {
+  from {top: 0; opacity: 0;}
+  to {top: 30px; opacity: 0/4;}
+}
+
+@-webkit-keyframes fadeout {
+  from {top: 30px; opacity: 0.4;} 
+  to {top: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {top: 30px; opacity: 0.4;}
+  to {top: 0; opacity: 0;}
+}
