@@ -14,4 +14,4 @@ This web app allows users to search through an extensive library of books and re
 - [JavaScript](https://www.javascript.com/)
 
 ## How to use?
-Enter your search query in the search box, of expand the advanced search for more options. Click search and the page will load the first 40 books that are returned by the query. You can then view up to 5 different pages containing the results of your query. Clicking on any title will genereate a preview that includes all the necessary information about the book as well as a link to more information and purchasing options. 
+Enter your search query in the search box, of expand the advanced search for more options. Click search and the page will load the first 40 books that are returned by the query. Clicking on any book cover will genereate a preview that includes all the necessary information about the book as well as a link to more information and purchasing options. 
