@@ -1,5 +1,5 @@
 # 8th-Light-Repo
-A collection of documents and web app for review by 8th Ligh
+A collection of documents and web app for review by 8th Light
 
 The website is build using Javascript and HTML and allows users to search any book using the Google Books API.
 
